@@ -57,6 +57,18 @@ public class Model extends JComponent {
 
     private void loadImg() {
     }
+        
+private Point sokobanPosition() {
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                String content = (String) getContent(row, col);
+                if (content.equals(sokoban) || content.equals(sokobanOnGoal)) {
+                    return new Point(row, col);
+                }
+            }
+        }
+        return null;
+    }
 
 
 }

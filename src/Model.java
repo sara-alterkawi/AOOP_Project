@@ -38,6 +38,21 @@ public class Model extends JComponent {
     }
 
     private void levelDataSetting (String[][] levelData, int levelNum) {
+        private void levelDataSetting (String[][] levelData, int levelNum) {
+        currentLevel = levelNum; // Assign the current level number.
+        numRows = levelData.length;
+        // It is assumed that all rows in the s array have the same number of columns,
+        // so we can use the length of the first row to determine the number of columns in the entire s array.
+        numCols =levelData[0].length;
+        gameBoard = new String[numRows][numCols]; // Initialize the game board.
+        // Iterate over the array rows and columns
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                gameBoard[row][col] = levelData[row][col]; // Fill in the game board with the contents of the provided level data.
+            }
+        }
+        playerPosition = sokobanPosition(); // Find the player's position.
+        update();
     }
 
     private void loadImg() {

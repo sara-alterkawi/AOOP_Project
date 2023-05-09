@@ -19,6 +19,19 @@ public ConsolePrinter(Model model) {
         String output = generateOutput();
         System.out.print(output);
     }
+    
+    private String generateOutput() {
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < model.getNumRows(); i++) {
+            for (int j = 0; j < model.getNumCols(); j++) {
+                sb.append(model.getContent(i, j));
+            }
+            sb.append("\n");
+        }
+
+        return sb.toString();
+    }
 
 
 }

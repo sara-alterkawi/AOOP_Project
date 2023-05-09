@@ -87,5 +87,21 @@ public String getContent(int row, int col) {
     public void setContent (Point point, String s){
         gameBoard[point.x][point.y] = s;// Set the content at the specified `point` on the game board to the given `object`.
     }
+    
+    /**
+     *  Initializes images used in a game
+     */
+    private void loadImg() {
+        try {
+            wallImg = ImageIO.read(new File("sokoban_icons/wall.png"));
+            freeSpaceImg = ImageIO.read(new File("sokoban_icons/freeSpace.png"));
+            boxImg = ImageIO.read(new File("sokoban_icons/box.png"));
+            goalPlaceImg = ImageIO.read(new File("sokoban_icons/goalPlace.png"));
+            boxOnGoalImg = ImageIO.read(new File("sokoban_icons/boxOnGoal.png"));
+            sokobanImg = ImageIO.read(new File("sokoban_icons/sokoban.png"));
+            } catch (IOException e) {
+            System.out.println("Image is not existed !!");
+        }
+    }
 
 }

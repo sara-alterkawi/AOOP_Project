@@ -55,6 +55,26 @@ public Model (String[][] levelData, int levelNum){
         playerPosition = sokobanPosition();
         update();
     }
+/**
+     * Provide a way for other objects in the program to be notified of changes to the game's state,
+     * which can be useful for coordinating different parts of the program or updating the user interface.
+     */
+    private void update() {
+        for (ChangeListener c : notifyListner) // Iterates over each ChangeListener.
+            c.stateChanged(new ChangeEvent(this)); // Calls the stateChanged method of each ChangeListener.
+    }
+
+    public Point sokobanPosition() {
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                String content = (String) getContent(row, col);
+                if (content.equals(sokoban) || content.equals(sokobanOnGoal)) {
+                    return new Point(row, col);
+                }
+            }
+        }
+        return null;
+    }
 
 
 }

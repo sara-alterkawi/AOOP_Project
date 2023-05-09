@@ -184,5 +184,108 @@ public void gameInstruction(Controller controller) {
             movements(1, 0);
         }
     }
+    
+    private void movements(int row, int col) {
+        Point step1 = new Point(playerPosition.x + row, playerPosition.y + col);
+        Point step2 = new Point(playerPosition.x + 2 * row, playerPosition.y + 2 * col);
+
+        boolean canMove = true;
+        String contentAtStep1 = getContent(step1);
+        String contentAtStep2 = getContent(step2);
+
+        if (step1.x < 0 || step1.y < 0 || step1.x >= numRows || step1.y >= numCols || contentAtStep1.equals(wall)) {
+            canMove = false;
+        } else {
+            switch (contentAtStep1) {
+                case box:
+                    if (step2.x < 0 || step2.y < 0 || step2.x >= numRows || step2.y >= numCols) {
+                        canMove = false;
+                    } else if (contentAtStep2.equals(freeSpace)) {
+                        setContent(step1, sokoban);
+                        setContent(step2, box);
+                    } else if (contentAtStep2.equals(goalPlace)) {
+                        setContent(step1, sokoban);
+                        setContent(step2, boxOnGoal);
+                    } else {
+                        canMove = false;
+                    }
+                    break;
+                case boxOnGoal:
+                    if (step2.x < 0 || step2.y < 0 || step2.x >= numRows || step2.y >= numCols) {
+                        canMove = false;
+                    } else if (contentAtStep2.equals(freeSpace)) {
+                        setContent(step1, sokobanOnGoal);
+                        setContent(step2, box);
+                    } else if (contentAtStep2.equals(goalPlace)) {
+                        setContent(step1, sokobanOnGoal);
+                        setContent(step2, boxOnGoal);
+                    } else {
+                        canMove = false;
+                    }
+                    break;
+                case freeSpace:
+                    setContent(step1, sokoban);
+                    break;
+                case goalPlace:
+                    setContent(step1, sokobanOnGoal);
+                    break;
+            }
+        }
+
+        if (canMove) {
+            if (getContent(playerPosition).equals(sokobanOnGoal)) {
+                setContent(playerPosition, goalPlace);
+            } else {
+                setContent(playerPosition, freeSpace);
+            }
+            playerPosition = step1;
+            update();
+        }
+    }
+
+    //paintComponent
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D graphics = (Graphics2D) g;
+
+        int gridTopMargin = 30; // adjust this to change the margin size
+
+        // draw level number
+        graphics.setFont(new Font("Arial", Font.BOLD + Font.ITALIC, 25));
+        graphics.drawString("Level: " + currentLevel, 10, gridTopMargin - 8);
+
+        // iterate over every row and column of the game board
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                // draw an image on the canvas accordingly
+                switch (getContent(row, col)) {
+                    case freeSpace:
+                        graphics.drawImage(freeSpaceImg, null, col * boardWidth, gridTopMargin + row * boardWidth);
+                        break;
+                    case goalPlace:
+                        graphics.drawImage(goalPlaceImg, null, col * boardWidth, gridTopMargin + row * boardWidth);
+                        break;
+                    case sokoban:
+                        graphics.drawImage(sokobanImg, null, col * boardWidth, gridTopMargin + row * boardWidth);
+                        break;
+                    case sokobanOnGoal:
+                        graphics.drawImage(sokobanImg, null, col * boardWidth, gridTopMargin + row * boardWidth);
+                        break;
+                    case box:
+                        graphics.drawImage(boxImg, null, col * boardWidth, gridTopMargin + row * boardWidth);
+                        break;
+                    case boxOnGoal:
+                        graphics.drawImage(boxOnGoalImg, null, col * boardWidth, gridTopMargin + row * boardWidth);
+                        break;
+                    case wall:
+                        graphics.drawImage(wallImg, null, col * boardWidth, gridTopMargin + row * boardWidth);
+                        break;
+                }
+            }
+        }
+    }
+    
+    
 
 }

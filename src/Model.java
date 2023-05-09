@@ -285,7 +285,20 @@ public void gameInstruction(Controller controller) {
             }
         }
     }
-    
+   @Override
+    public int getWidth() {
+        return boardWidth * numCols + 30; //Calculate the width of the game board adding 30 pixels of padding
+    }
+
+    @Override
+    public int getHeight() {
+        return boardWidth * numRows + 90; // Calculate the height of the game board adding 90 pixels of padding
+    }
+
+    public void addNotifyListener(ChangeListener c) {
+        notifyListner.add(c);
+    }
+ 
     
 
 }

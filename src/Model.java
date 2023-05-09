@@ -35,6 +35,26 @@ public class Model extends JComponent {
     private BufferedImage goalPlaceImg;
     private BufferedImage boxOnGoalImg;
     private BufferedImage sokobanImg;
+    
+public Model (String[][] levelData, int levelNum){
+        notifyListner = new LinkedList<>();
+        loadImg(); // Load the images
+        levelDataSetting(levelData,levelNum); // Initial game board.
+    }
+    
+    public void levelDataSetting(String[][] s, int r) {
+        currentLevel = r;
+        numRows = s.length;
+        numCols = s[0].length;
+        gameBoard = new String[numRows][numCols];
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numCols; j++) {
+                gameBoard[i][j] = s[i][j];
+            }
+        }
+        playerPosition = sokobanPosition();
+        update();
+    }
 
 
 }

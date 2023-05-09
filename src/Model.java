@@ -36,7 +36,7 @@ public class Model extends JComponent {
     private BufferedImage boxOnGoalImg;
     private BufferedImage sokobanImg;
     
-public Model (String[][] levelData, int levelNum){
+    public Model (String[][] levelData, int levelNum){
         notifyListner = new LinkedList<>();
         loadImg(); // Load the images
         levelDataSetting(levelData,levelNum); // Initial game board.
@@ -55,7 +55,7 @@ public Model (String[][] levelData, int levelNum){
         playerPosition = sokobanPosition();
         update();
     }
-/**
+    /**
      * Provide a way for other objects in the program to be notified of changes to the game's state,
      * which can be useful for coordinating different parts of the program or updating the user interface.
      */
@@ -75,8 +75,8 @@ public Model (String[][] levelData, int levelNum){
         }
         return null;
     }
-
-public String getContent(int row, int col) {
+    
+    public String getContent(int row, int col) {
         return gameBoard[row][col];// Return the content at the specified row and column on the game board.
     }
 
@@ -170,8 +170,8 @@ public String getContent(int row, int col) {
                 || contentRight.equals(sokoban)
                 || contentRight.equals(sokobanOnGoal));
     }
-
-public void gameInstruction(Controller controller) {
+    
+    public void gameInstruction(Controller controller) {
         String instruction = controller.getDataSaver();
 
         if (instruction.equals("RIGHT")) {
@@ -299,6 +299,4 @@ public void gameInstruction(Controller controller) {
         notifyListner.add(c);
     }
  
-    
-
 }

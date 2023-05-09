@@ -118,6 +118,58 @@ public String getContent(int row, int col) {
                 .flatMap(Arrays::stream)
                 .allMatch(cell -> !cell.equals(box));
     }
+    
+    public boolean loseCase() {
+        if (winCase()) {
+            return false;
+        }
+        for (int row = 1; row < numRows - 1; row++) {
+            for (int col = 0; col < numCols; col++) {
+                if (isBoxAt(row, col) && canPushCrateVertically(row, col)) {
+                    return false;
+                }
+            }
+        }
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 1; col < numCols - 1; col++) {
+                if (isBoxAt(row, col) && canPushCrateHorizontally(row, col)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean isBoxAt(int row, int col) {
+        String content = getContent(row, col);
+        return content.equals(box) || content.equals(boxOnGoal);
+    }
+
+    private boolean canPushCrateVertically(int row, int col) {
+        String contentAbove = getContent(row - 1, col);
+        String contentBelow = getContent(row + 1, col);
+        return (contentAbove.equals(freeSpace)
+                || contentAbove.equals(goalPlace)
+                || contentAbove.equals(sokoban)
+                || contentAbove.equals(sokobanOnGoal))
+                && (contentBelow.equals(freeSpace)
+                || contentBelow.equals(goalPlace)
+                || contentBelow.equals(sokoban)
+                || contentBelow.equals(sokobanOnGoal));
+    }
+
+    private boolean canPushCrateHorizontally(int row, int col) {
+        String contentLeft = getContent(row, col - 1);
+        String contentRight = getContent(row, col + 1);
+        return (contentLeft.equals(freeSpace)
+                || contentLeft.equals(goalPlace)
+                || contentLeft.equals(sokoban)
+                || contentLeft.equals(sokobanOnGoal))
+                && (contentRight.equals(freeSpace)
+                || contentRight.equals(goalPlace)
+                || contentRight.equals(sokoban)
+                || contentRight.equals(sokobanOnGoal));
+    }
 
 
 }

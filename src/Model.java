@@ -171,5 +171,18 @@ public String getContent(int row, int col) {
                 || contentRight.equals(sokobanOnGoal));
     }
 
+public void gameInstruction(Controller controller) {
+        String instruction = controller.getDataSaver();
+
+        if (instruction.equals("RIGHT")) {
+            movements(0, 1);
+        } else if (instruction.equals("LEFT")) {
+            movements(0, -1);
+        } else if (instruction.equals("UP")) {
+            movements(-1, 0);
+        } else if (instruction.equals("DOWN")) {
+            movements(1, 0);
+        }
+    }
 
 }

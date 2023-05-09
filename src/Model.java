@@ -76,5 +76,16 @@ public Model (String[][] levelData, int levelNum){
         return null;
     }
 
+public String getContent(int row, int col) {
+        return gameBoard[row][col];// Return the content at the specified row and column on the game board.
+    }
+
+    public String getContent(Point point){
+        return gameBoard[point.x][point.y]; // Return the content at the specified `point` on the game board.
+    }
+
+    public void setContent (Point point, String s){
+        gameBoard[point.x][point.y] = s;// Set the content at the specified `point` on the game board to the given `object`.
+    }
 
 }

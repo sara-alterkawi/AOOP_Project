@@ -63,5 +63,14 @@ public Levels(Model model) {
         }
     }
 
+     private void updateLevelData(int level) {
+        currentLevel = level;
+        model.levelDataSetting(getCurrentLevel(level), level);
+    }
+
+    public static String[][] getCurrentLevel(int index){
+        // Retrieve the data for each level in the game.
+        return gameLevels[index-1];
+    }
 
 }

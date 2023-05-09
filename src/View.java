@@ -32,4 +32,17 @@ public class View {
         setSize(model.getWidth(),model.getHeight()); // Set the size of the View to the width and height of gameModel.
         setVisible(true); // Sets the View to be visible.
     }
+  @Override
+    public String getDataSaver() {
+        String currentDataSaver = dataSaver;
+        dataSaver = null;
+        return currentDataSaver; // Current value of gameDataSaver
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        setSize(model.getWidth(),model.getHeight()); // Set the size of the View to the width and height of gameModel
+        model.repaint();
+    }
+
 }

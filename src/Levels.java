@@ -41,5 +41,27 @@ public class Levels implements ChangeListener {
                     {"w", "w", "w", "w", "w", "w", "w", "w"}
             }
     };
+public Levels(Model model) {
+        this.model = model;
+        currentLevel = 1;
+        model.addNotifyListener(this);
+    }
+
+    /**
+     * Defines what should happen when the state of the "Model" object changes.
+     * */
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        boolean hasWon = model.winCase();
+        boolean hasLost = model.loseCase();
+        boolean isRunning = currentLevel <= gameLevels.length;
+
+        if (hasWon && isRunning) {
+            updateLevelData(currentLevel + 1);
+        } else if (hasLost) {
+            updateLevelData(currentLevel);
+        }
+    }
+
 
 }

@@ -103,5 +103,21 @@ public String getContent(int row, int col) {
             System.out.println("Image is not existed !!");
         }
     }
+    public int getNumCols (){
+        return numCols;
+    }
+
+    public int getNumRows (){
+        return numRows;
+    }
+
+    public boolean winCase() {
+        // Use Java 8 Streams API to flatten the 2D game board array into a 1D stream of cells.
+        // Check if all cells are marked with something other than box.
+        return Arrays.stream(gameBoard)
+                .flatMap(Arrays::stream)
+                .allMatch(cell -> !cell.equals(box));
+    }
+
 
 }

@@ -5,11 +5,11 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class View extends JFrame implements ChangeListener, Controller {
-  
-  private final Model model;
-  private String dataSaver = null;
-  
-  public View(Model model, String name) {
+
+    private final Model model;
+    private String dataSaver = null;
+
+    public View(Model model, String name) {
         this.model = model;
         model.addNotifyListener(this);
         add(model);
@@ -34,6 +34,7 @@ public class View extends JFrame implements ChangeListener, Controller {
         setSize(model.getWidth(),model.getHeight()); // Set the size of the View to the width and height of gameModel.
         setVisible(true); // Sets the View to be visible.
     }
+  
   @Override
     public String getDataSaver() {
         String currentDataSaver = dataSaver;

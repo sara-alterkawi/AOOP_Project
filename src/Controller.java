@@ -1,4 +1,3 @@
-public class Controller {
+public interface Controller {
   String getDataSaver();
-
 }

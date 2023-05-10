@@ -3,7 +3,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-public class View {
+
+public class View extends JFrame implements ChangeListener, Controller {
+  
   private final Model model;
   private String dataSaver = null;
   

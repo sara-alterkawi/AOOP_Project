@@ -1,5 +1,7 @@
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
 
 public class Levels implements ChangeListener {
 
@@ -41,7 +43,8 @@ public class Levels implements ChangeListener {
                     {"w", "w", "w", "w", "w", "w", "w", "w"}
             }
     };
-public Levels(Model model) {
+    
+    public Levels(Model model) {
         this.model = model;
         currentLevel = 1;
         model.addNotifyListener(this);
@@ -57,9 +60,13 @@ public Levels(Model model) {
         boolean isRunning = currentLevel <= gameLevels.length;
 
         if (hasWon && isRunning) {
+            // JOptionPane.showMessageDialog(this, "Level" + currentLevel + "is completed", "You won!", JOptionPane.INFORMATION_MESSAGE);
             updateLevelData(currentLevel + 1);
+            model.reset();
         } else if (hasLost) {
+            // JOptionPane.showMessageDialog(this, "Level" + currentLevel + "is not completed", "You lost!", JOptionPane.INFORMATION_MESSAGE);
             updateLevelData(currentLevel);
+            model.reset();
         }
     }
 

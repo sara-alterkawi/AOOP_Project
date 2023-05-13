@@ -8,11 +8,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Model extends JComponent {
+    
     private String [][] gameBoard;
     private int currentLevel;
-
     private final LinkedList<ChangeListener> notifyListner;
 
     private Point playerPosition;
@@ -35,6 +37,12 @@ public class Model extends JComponent {
     private BufferedImage goalPlaceImg;
     private BufferedImage boxOnGoalImg;
     private BufferedImage sokobanImg;
+    private BufferedImage sokobanOnGoalImg;
+    
+    public int elapsedTime;
+    private GameTimer gameTimer;
+    
+    public static int numMoves = 0;
     
     public Model (String[][] levelData, int levelNum){
         notifyListner = new LinkedList<>();
@@ -55,13 +63,16 @@ public class Model extends JComponent {
         playerPosition = sokobanPosition();
         update();
     }
+    
     /**
      * Provide a way for other objects in the program to be notified of changes to the game's state,
      * which can be useful for coordinating different parts of the program or updating the user interface.
      */
     private void update() {
         for (ChangeListener c : notifyListner) // Iterates over each ChangeListener.
-            c.stateChanged(new ChangeEvent(this)); // Calls the stateChanged method of each ChangeListener.
+            if (elapsedTime % 1 == 0) {
+                c.stateChanged(new ChangeEvent(this));
+            }    
     }
 
     public Point sokobanPosition() {
@@ -99,10 +110,12 @@ public class Model extends JComponent {
             goalPlaceImg = ImageIO.read(new File("sokoban_icons/goalPlace.png"));
             boxOnGoalImg = ImageIO.read(new File("sokoban_icons/boxOnGoal.png"));
             sokobanImg = ImageIO.read(new File("sokoban_icons/sokoban.png"));
-            } catch (IOException e) {
+            sokobanOnGoalImg = ImageIO.read(new File("sokoban_icons/sokobanOnGoal.png"));
+        } catch (IOException e) {
             System.out.println("Image is not existed !!");
         }
     }
+    
     public int getNumCols (){
         return numCols;
     }
@@ -125,14 +138,14 @@ public class Model extends JComponent {
         }
         for (int row = 1; row < numRows - 1; row++) {
             for (int col = 0; col < numCols; col++) {
-                if (isBoxAt(row, col) && canPushCrateVertically(row, col)) {
+                if (isBoxAt(row, col) && canPushBoxVertically(row, col)) {
                     return false;
                 }
             }
         }
         for (int row = 0; row < numRows; row++) {
             for (int col = 1; col < numCols - 1; col++) {
-                if (isBoxAt(row, col) && canPushCrateHorizontally(row, col)) {
+                if (isBoxAt(row, col) && canPushBoxHorizontally(row, col)) {
                     return false;
                 }
             }
@@ -145,7 +158,7 @@ public class Model extends JComponent {
         return content.equals(box) || content.equals(boxOnGoal);
     }
 
-    private boolean canPushCrateVertically(int row, int col) {
+    private boolean canPushBoxVertically(int row, int col) {
         String contentAbove = getContent(row - 1, col);
         String contentBelow = getContent(row + 1, col);
         return (contentAbove.equals(freeSpace)
@@ -158,7 +171,7 @@ public class Model extends JComponent {
                 || contentBelow.equals(sokobanOnGoal));
     }
 
-    private boolean canPushCrateHorizontally(int row, int col) {
+    private boolean canPushBoxHorizontally(int row, int col) {
         String contentLeft = getContent(row, col - 1);
         String contentRight = getContent(row, col + 1);
         return (contentLeft.equals(freeSpace)
@@ -242,18 +255,27 @@ public class Model extends JComponent {
             update();
         }
     }
+    
+     public static void moved() {
+        numMoves++;
+    }
 
+    public static int getNumMoves() {
+        return numMoves;
+    }
+    
     //paintComponent
-    @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D graphics = (Graphics2D) g;
+        Graphics2D graphicses = (Graphics2D) g;
 
         int gridTopMargin = 30; // adjust this to change the margin size
 
         // draw level number
-        graphics.setFont(new Font("Arial", Font.BOLD + Font.ITALIC, 25));
-        graphics.drawString("Level: " + currentLevel, 10, gridTopMargin - 8);
+        graphicses.setFont(new Font("Arial", Font.BOLD + Font.ITALIC, 14));
+        graphicses.drawString("Level: " + currentLevel, 5, gridTopMargin - 8);
+        graphicses.drawString("Moves: "  + numMoves, 70, gridTopMargin -8 );
+        graphicses.drawString("Time: " + elapsedTime, 150, gridTopMargin -8);
 
         // iterate over every row and column of the game board
         for (int row = 0; row < numRows; row++) {
@@ -261,30 +283,31 @@ public class Model extends JComponent {
                 // draw an image on the canvas accordingly
                 switch (getContent(row, col)) {
                     case freeSpace:
-                        graphics.drawImage(freeSpaceImg, null, col * boardWidth, gridTopMargin + row * boardWidth);
+                        graphicses.drawImage(freeSpaceImg, null, col * boardWidth, gridTopMargin + row * boardWidth);
                         break;
                     case goalPlace:
-                        graphics.drawImage(goalPlaceImg, null, col * boardWidth, gridTopMargin + row * boardWidth);
+                        graphicses.drawImage(goalPlaceImg, null, col * boardWidth, gridTopMargin + row * boardWidth);
                         break;
                     case sokoban:
-                        graphics.drawImage(sokobanImg, null, col * boardWidth, gridTopMargin + row * boardWidth);
+                        graphicses.drawImage(sokobanImg, null, col * boardWidth, gridTopMargin + row * boardWidth);
                         break;
                     case sokobanOnGoal:
-                        graphics.drawImage(sokobanImg, null, col * boardWidth, gridTopMargin + row * boardWidth);
+                        graphicses.drawImage(sokobanOnGoalImg, null, col * boardWidth, gridTopMargin + row * boardWidth);
                         break;
                     case box:
-                        graphics.drawImage(boxImg, null, col * boardWidth, gridTopMargin + row * boardWidth);
+                        graphicses.drawImage(boxImg, null, col * boardWidth, gridTopMargin + row * boardWidth);
                         break;
                     case boxOnGoal:
-                        graphics.drawImage(boxOnGoalImg, null, col * boardWidth, gridTopMargin + row * boardWidth);
+                        graphicses.drawImage(boxOnGoalImg, null, col * boardWidth, gridTopMargin + row * boardWidth);
                         break;
                     case wall:
-                        graphics.drawImage(wallImg, null, col * boardWidth, gridTopMargin + row * boardWidth);
+                        graphicses.drawImage(wallImg, null, col * boardWidth, gridTopMargin + row * boardWidth);
                         break;
                 }
             }
         }
     }
+    
    @Override
     public int getWidth() {
         return boardWidth * numCols + 30; //Calculate the width of the game board adding 30 pixels of padding
@@ -297,6 +320,31 @@ public class Model extends JComponent {
 
     public void addNotifyListener(ChangeListener c) {
         notifyListner.add(c);
+    }
+    
+    public void startTimer() {
+        gameTimer = new GameTimer();
+        gameTimer.start();
+    }
+
+    public void reset(){
+        elapsedTime = 0;
+        numMoves = 0;
+    }
+
+    private class GameTimer extends Thread {
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    Thread.sleep(1000);
+                    elapsedTime++;
+                    update();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
  
 }
